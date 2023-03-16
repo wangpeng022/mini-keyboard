@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import board from './images/board.png';
 import './App.css';
-import { Space, Select, Input, Form, Row, Col, Typography } from 'antd';
+import { Space, Select, Input, Form, Row, Col, Typography, Button } from 'antd';
 
 function App() {
   const options = [
@@ -15,7 +15,7 @@ function App() {
     },
     {
       value: 0x02,
-      label: '多媒体键',
+      label: '多媒体',
     },
     {
       value: 0x03,
@@ -30,113 +30,159 @@ function App() {
     {
       type: 0x00,
       code: '',
+      extendCode: '',
       label: 'key1'
     },
     {
       type: 0x00,
       code: '',
+      extendCode: '',
       label: 'key2'
     },
     {
       type: 0x00,
       code: '',
+      extendCode: '',
       label: 'key3'
     },
     {
       type: 0x00,
       code: '',
+      extendCode: '',
       label: 's1'
     },
     {
       type: 0x00,
       code: '',
+      extendCode: '',
       label: 's2'
     },
     {
       type: 0x00,
       code: '',
+      extendCode: '',
       label: 's3'
     },
     {
       type: 0x00,
       code: '',
+      extendCode: '',
       label: 's4'
     },
     {
       type: 0x00,
       code: '',
+      extendCode: '',
       label: 's5'
     },
     {
       type: 0x00,
       code: '',
+      extendCode: '',
       label: 's6'
     },
   ];
-  const Item = ({ item }) => {
-    const { label } = item;
+  const [form] = Form.useForm();
+  const ItemKey = ({ field }) => {
+    const { name: index} = field;
+    const { label } = keys[index];
     return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <Form.Item style={{ display: 'flex', flexDirection: 'column' }} noStyle key={index}>
         <span>{label}</span>
         <Space.Compact style={{ margin: '20px 10px' }}>
-          <Select defaultValue={0x00} options={options} style={{ width: 84 }} />
-          <Input placeholder='按键' style={{ width: 70 }} />
-          <Input placeholder='按键2' style={{ width: 70 }} />
+          <Form.Item
+            {...field}
+            noStyle
+            name={[field.name, 'type']}
+            key={index + 'type'}
+          >
+            <Select options={options} style={{ width: 84 }} />
+          </Form.Item>
+          <Form.Item
+            {...field}
+            noStyle
+            name={[field.name, 'code']}
+            key={index + 'code'}
+          >
+            <Input placeholder='按键' style={{ width: 70 }} maxLength={1} showCount/>
+          </Form.Item>
+          <Form.Item
+            {...field}
+            noStyle
+            name={[field.name, 'extendCode']}
+            key={index + 'extendCode'}
+          >
+            <Input placeholder='按键2' style={{ width: 70 }} />
+          </Form.Item>
         </Space.Compact>
-      </div>
-
+      </Form.Item>
     )
+  }
+
+  const finish = () => {
+    const values = form.getFieldsValue();
+    console.log(values, '1');
   }
   return (
     <div className="App">
-      <Form className="content">
-        {/* {
-          keys.map((item) => <Item item={item}  key={item.label}/>)
-        } */}
-        <Row className='row' justify='space-around'>
-          <Col>
-            <Item item={keys[5]} />
-          </Col>
-          <Col>
-            <Item item={keys[7]} />
-          </Col>
-        </Row>
-        <img src={board} className='App-logo' />
-        <Row className='row' justify='space-around'>
-          <Col>
-            <Item item={keys[6]} />
-          </Col>
-          <Col>
-            <Item item={keys[8]} />
-          </Col>
-        </Row>
-        <div className='leftSide'>
-          <Row className='row'>
-            <Col>
-              <Item item={keys[3]} />
-            </Col>
-            <Col>
-              <Item item={keys[4]} />
-            </Col>
-          </Row>
-        </div>
-        {/* 主键 */}
-        <Typography.Title
-          level={3}
-        >主键</Typography.Title>
-        <div>
-          <Row className='row' justify='space-evenly'>
-            <Col>
-              <Item item={keys[0]} />
-            </Col>
-            <Col>
-              <Item item={keys[1]} />
-            </Col>
-            <Col>
-              <Item item={keys[2]} />
-            </Col>
-          </Row>
-        </div>
+      <div className='header'>
+        <Space >
+          <Button type='primary' size='small' onClick={finish}>Finish</Button>
+          <Button size='small'>Connect</Button>
+        </Space>
+      </div>
+      <Form className="content" form={form}>
+        <Form.List initialValue={keys} name='list'>
+          {(fields) => {
+            return <>
+              <Row className='row' justify='space-around'>
+                <Col>
+                  <ItemKey field={fields[5]} />
+                </Col>
+                <Col>
+                <ItemKey field={fields[7]} />
+                </Col>
+              </Row>
+              <img src={board} className='App-logo' />
+              <Row className='row' justify='space-around'>
+                <Col>
+                <ItemKey field={fields[6]} />
+                </Col>
+                <Col>
+                <ItemKey field={fields[8]} />
+                </Col>
+              </Row>
+              <div className='leftSide'>
+                <Row className='row'>
+                  <Col>
+                  <ItemKey field={fields[3]} />
+                  </Col>
+                  <Col>
+                  <ItemKey field={fields[4]} />
+                  </Col>
+                </Row>
+              </div>
+              {/* 主键 */}
+              <Typography.Title
+                level={3}
+              >主键</Typography.Title>
+              <div>
+                <Row className='row' justify='space-evenly'>
+                  <Col>
+                  <ItemKey field={fields[0]} />
+                  </Col>
+                  <Col>
+                  <ItemKey field={fields[1]} />
+                  </Col>
+                  <Col>
+                  <ItemKey field={fields[2]} />
+                  </Col>
+                </Row>
+              </div>
+            </>
+          }
+          }
+        </Form.List>
       </Form>
     </div>
   );

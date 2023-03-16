@@ -13,6 +13,19 @@
     /* animation: App-logo-spin infinite 20s linear; */
   }
 }
+.header{
+  box-sizing: border-box;
+  border-bottom: 1px solid rgb(117, 115, 115);
+  height: 42px;
+  justify-content: space-between;
+  left: 0;
+  padding: 0.5rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;
+  text-align: right;
+}
 
 .content {
   position: relative;
@@ -23,7 +36,7 @@
   justify-content: center;
   /* font-size: calc(10px + 2vmin); */
   color: white;
-  width: 780px;
+  width: 820px;
   margin: 0 auto;
 }
 
@@ -37,6 +50,11 @@
   position: absolute;
   right: 100%;
   transform: translateY(-93px);
+}
+.btn{
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 @keyframes App-logo-spin {
