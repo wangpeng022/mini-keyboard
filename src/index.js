@@ -1,13 +1,28 @@
+/*
+ * @Description: 
+ * @version: 
+ * @Author: 王鹏
+ * @Date: 2023-03-15 14:30:55
+ * @LastEditors: 王鹏
+ * @LastEditTime: 2023-03-16 15:42:24
+ */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ConfigProvider, theme } from 'antd';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <ConfigProvider
+      theme={{
+        algorithm: theme.darkAlgorithm,
+      }}
+    >
+      <App />
+    </ConfigProvider>
   </React.StrictMode>
 );
 
