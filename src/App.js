@@ -2,10 +2,10 @@ import logo from './logo.svg';
 import board from './images/board.png';
 import './App.css';
 import { Space, Select, Input, Form, Row, Col, Typography, Button, message } from 'antd';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import { keyTypes, keys, fnOptions, mediaOptions } from './config';
-
+import Clock from './components/Clock';
 
 
 function App() {
@@ -43,6 +43,7 @@ function App() {
                     noStyle
                     name={[field.name, 'code']}
                     key={index + 'code'}
+                    rules={[{ required: true }]}
                   >
                     <Input placeholder='按键' style={{ width: 70 }} maxLength={1} showCount />
                   </Form.Item>
@@ -52,8 +53,9 @@ function App() {
                     noStyle
                     name={[field.name, 'code']}
                     key={index + 'code'}
+                    rules={[{ required: true }]}
                   >
-                    <Select options={fnOptions} style={{ width: 180 }} />
+                    <Select options={fnOptions} style={{ width: 160 }} />
                   </Form.Item>
 
                 // 多媒体
@@ -63,8 +65,9 @@ function App() {
                     noStyle
                     name={[field.name, 'code']}
                     key={index + 'code'}
+                    rules={[{ required: true }]}
                   >
-                    <Select options={mediaOptions} style={{ width: 180 }} />
+                    <Select options={mediaOptions} style={{ width: 160 }} />
                   </Form.Item>
                 // 组合
                 case 3:
@@ -75,6 +78,7 @@ function App() {
                         noStyle
                         name={[field.name, 'code']}
                         key={index + 'code'}
+                        rules={[{ required: true }]}
                       >
                         <Input placeholder='按键' style={{ width: 70 }} maxLength={1} showCount />
                       </Form.Item>
@@ -83,6 +87,7 @@ function App() {
                         noStyle
                         name={[field.name, 'extendCode']}
                         key={index + 'extendCode'}
+                        rules={[{ required: true }]}
                       >
                         <Input placeholder='按键2' style={{ width: 70 }} maxLength={1} showCount />
                       </Form.Item>
@@ -95,6 +100,7 @@ function App() {
                     noStyle
                     name={[field.name, 'code']}
                     key={index + 'code'}
+                    rules={[{ required: true }]}
                   >
                     <Input placeholder='字符串' style={{ width: 270 }} maxLength={30} showCount />
                   </Form.Item>
@@ -164,6 +170,15 @@ function App() {
       await sendQuery();
       setConnected(true);
 
+      const { value, done } = await reader.current.read();
+      console.log(value, 'valuevaluevalue');
+      
+      if (done) {
+        console.log('已断开'); 
+        await readableStreamClosed.catch(()=>{});       
+        // break;
+      }
+
 
     } catch (error) {
       if (error.name == 'NotFoundError') {
@@ -180,11 +195,11 @@ function App() {
 
   const disconnectSerial = async () => {
     try {
-      await reader.current.cancel();
-      await reader.current.releaseLock();
-      await writer.current.close();
-      await writer.current.releaseLock();
-      await port.current.close();
+      await reader?.current.cancel();
+      await reader?.current.releaseLock();
+      await writer?.current.close();
+      await writer?.current.releaseLock();
+      await port?.current.close();
       setConnected(false);
     } catch (e) {
       await sendQuery();
@@ -194,8 +209,11 @@ function App() {
   }
 
   const finish = () => {
-    const values = form.getFieldsValue();
-    console.log(values, '1');
+    form.validateFields().then((values)=>{
+      console.log(values, '1');
+    }).catch(error => {
+      message.error(error.errorDescription || '表单填写错误');
+    });
   }
   return (
     <div className="App">
@@ -273,6 +291,7 @@ function App() {
           }
         </Form.List>
       </Form>
+      <Clock/>
     </div>
   );
 }
